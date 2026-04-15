@@ -22,12 +22,12 @@ function App() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  const handleUpload = async (file) => {
+  const handleUpload = async (file, jobDescription) => {
     setLoading(true);
     setError("");
 
     try {
-      const uploadResponse = await uploadResume(file);
+      const uploadResponse = await uploadResume(file, jobDescription);
       setResumeId(uploadResponse.resume_id);
 
       await analyzeResume(uploadResponse.resume_id);

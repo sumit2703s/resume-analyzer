@@ -19,7 +19,7 @@ async def analyze_resume(resume_id: int, session: AsyncSession = Depends(get_ses
         raise HTTPException(status_code=409, detail="Analysis already exists for this resume.")
 
     try:
-        analysis_payload = await ai_service.analyze_resume(resume.text)
+        analysis_payload = await ai_service.analyze_resume(resume.text, resume.job_description)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

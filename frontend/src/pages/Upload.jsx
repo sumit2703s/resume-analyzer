@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default function Upload({ onUpload, loading, error }) {
   const [file, setFile] = useState(null);
+  const [jobDescription, setJobDescription] = useState("");
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrop = (event) => {
@@ -21,7 +22,7 @@ export default function Upload({ onUpload, loading, error }) {
   return (
     <div className="upload-shell">
       <div
-        className={`upload-dropzone collapse-card ${dragActive ? "drag-active" : ""}`}
+        className={`upload-dropzone ${dragActive ? "drag-active" : ""}`}
         onDrop={handleDrop}
         onDragOver={handleDrag}
         onDragLeave={() => setDragActive(false)}
@@ -38,6 +39,27 @@ export default function Upload({ onUpload, loading, error }) {
           accept="application/pdf"
           className="file-input"
           onChange={(event) => setFile(event.target.files?.[0] || null)}
+        />
+      </div>
+
+      <div className="card" style={{ width: "100%", maxWidth: "650px", textAlign: "left", padding: "24px" }}>
+        <h3 style={{ marginBottom: "12px", fontSize: "1.1rem" }}>Target Job Description (Optional)</h3>
+        <textarea
+          placeholder="Paste requirements here to tailor the analysis..."
+          style={{
+            width: "100%",
+            minHeight: "120px",
+            background: "rgba(0,0,0,0.2)",
+            border: "1px solid var(--card-border)",
+            borderRadius: "12px",
+            padding: "16px",
+            color: "var(--text-main)",
+            fontFamily: "inherit",
+            resize: "vertical",
+            fontSize: "0.95rem"
+          }}
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
         />
       </div>
 
@@ -58,17 +80,20 @@ export default function Upload({ onUpload, loading, error }) {
           type="button"
           className="button-primary"
           disabled={!file || loading}
-          onClick={() => file && onUpload(file)}
+          onClick={() => file && onUpload(file, jobDescription)}
         >
           {loading ? "Analyzing Matrix..." : "Commence Analysis"}
         </button>
-        {file && !loading && (
+        {(file || jobDescription) && !loading && (
           <button
             type="button"
             className="button-secondary"
-            onClick={() => setFile(null)}
+            onClick={() => {
+              setFile(null);
+              setJobDescription("");
+            }}
           >
-            Clear Selection
+            Clear All
           </button>
         )}
       </div>

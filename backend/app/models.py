@@ -9,6 +9,7 @@ class Resume(Base):
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String(255), nullable=False)
     text = Column(Text, nullable=False)
+    job_description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     analysis = relationship("Analysis", back_populates="resume", uselist=False, cascade="all, delete-orphan")

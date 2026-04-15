@@ -29,12 +29,16 @@ async def _extract_text_from_pdf(upload_file: UploadFile) -> str:
 
 
 @router.post("/upload")
-async def upload_resume(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+async def upload_resume(
+    file: UploadFile = File(...), 
+    job_description: str | None = Form(None),
+    session: AsyncSession = Depends(get_session)
+):
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF resumes are supported.")
 
     text = await _extract_text_from_pdf(file)
-    resume = models.Resume(filename=file.filename, text=text)
+    resume = models.Resume(filename=file.filename, text=text, job_description=job_description)
     session.add(resume)
     await session.commit()
     await session.refresh(resume)

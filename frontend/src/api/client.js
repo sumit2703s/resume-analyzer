@@ -18,9 +18,12 @@ async function _parseResponse(response) {
   return text ? JSON.parse(text) : {};
 }
 
-export async function uploadResume(file) {
+export async function uploadResume(file, jobDescription = "") {
   const formData = new FormData();
   formData.append("file", file);
+  if (jobDescription) {
+    formData.append("job_description", jobDescription);
+  }
 
   const response = await fetch(`${API_BASE}/api/upload`, {
     method: "POST",

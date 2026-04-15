@@ -51,7 +51,7 @@ def _normalize_analysis(payload: dict) -> dict:
     return payload
 
 
-async def analyze_resume(resume_text: str, api_key: str | None = None) -> dict:
+async def analyze_resume(resume_text: str, job_description: str | None = None, api_key: str | None = None) -> dict:
     api_key = api_key or GEMINI_API_KEY
     if not api_key:
         raise ValueError("Gemini API key is not configured in GEMINI_API_KEY")
@@ -68,7 +68,8 @@ async def analyze_resume(resume_text: str, api_key: str | None = None) -> dict:
         "Return only valid JSON. Do not include any explanation text outside the JSON object. "
         "The JSON object should include keyword_analysis as an object with matched_keywords, "
         "missing_keywords, and match_percentage.\n"
-        "Resume text:\n" + resume_text
+        + (f"TARGET JOB DESCRIPTION:\n{job_description}\n\n" if job_description else "") +
+        "RESUME TEXT:\n" + resume_text
     )
 
     is_modern = "gemini" in GEMINI_MODEL_NAME.lower()
