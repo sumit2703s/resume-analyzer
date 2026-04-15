@@ -56,19 +56,29 @@ async def analyze_resume(resume_text: str, job_description: str | None = None, a
     if not api_key:
         raise ValueError("Gemini API key is not configured in GEMINI_API_KEY")
 
+    system_instructions = (
+        "You are an expert ATS (Applicant Tracking System) optimizer. "
+        "Your goal is to analyze the provided resume text and return a high-precision JSON report.\n\n"
+        "ANALYSIS MODES:\n"
+        "1. If a 'TARGET JOB DESCRIPTION' is provided: Calculate the ats_score, strengths, weaknesses, and keyword_analysis "
+        "based strictly on how well this resume matches the requirements of THAT specific job.\n"
+        "2. If NO job description is provided: Perform a general evaluation based on industry-standard ATS best practices, "
+        "identifying broadly desirable DevOps/Engineering keywords and structural improvements.\n\n"
+        "REQUIRED JSON STRUCTURE:\n"
+        "{\n"
+        "  \"ats_score\": (0-100 integer),\n"
+        "  \"strengths\": [strings],\n"
+        "  \"weaknesses\": [strings],\n"
+        "  \"keyword_analysis\": { \"matched_keywords\": [], \"missing_keywords\": [], \"match_percentage\": float },\n"
+        "  \"suggestions\": [strings],\n"
+        "  \"improved_bullets\": [strings]\n"
+        "}\n"
+    )
+
     prompt = (
-        "You are an ATS resume analyzer. Analyze the resume and return JSON with:\n"
-        "* ats_score\n"
-        "* strengths\n"
-        "* weaknesses\n"
-        "* keyword_analysis\n"
-        "* suggestions\n"
-        "* improved_bullets\n"
-        "\n"
-        "Return only valid JSON. Do not include any explanation text outside the JSON object. "
-        "The JSON object should include keyword_analysis as an object with matched_keywords, "
-        "missing_keywords, and match_percentage.\n"
-        + (f"TARGET JOB DESCRIPTION:\n{job_description}\n\n" if job_description else "") +
+        system_instructions +
+        "\n--- INPUT DATA ---\n" +
+        (f"TARGET JOB DESCRIPTION:\n{job_description}\n\n" if job_description else "NO TARGET JOB DESCRIPTION PROVIDED (Perform General Analysis).\n\n") +
         "RESUME TEXT:\n" + resume_text
     )
 
