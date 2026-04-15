@@ -1,0 +1,24 @@
+.env
+.env.*
+*.log
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+*.sqlite3
+__MACOSX/
+.DS_Store
+
+# Node
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+/dist
+
+# Editor
+.vscode/
+.idea/
