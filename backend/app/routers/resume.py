@@ -1,7 +1,7 @@
 from io import BytesIO
 
 import pdfplumber
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .. import models
